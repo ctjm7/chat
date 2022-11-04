@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet, Text, View, TextInput, ImageBackground, TouchableOpacity
+  StyleSheet, Text, View, TextInput, ImageBackground, TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native';
 
 // background color choices
@@ -60,6 +61,8 @@ export default class Start extends Component {
               </TouchableOpacity>
             </View>
           </View>
+          {/* this moves up the input screen but keyboard is no longer covered
+          <KeyboardAvoidingView behavior="height" /> */}
         </ImageBackground>
       </View>
     );

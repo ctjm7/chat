@@ -15,4 +15,5 @@ This app was developed to understand the use of React Native in mobile app devel
 * React Native
 * React Navigation
 * React Native Gesture-Handler
-* Firebase
+* React Native Gifted Chat
+* Google Firestore Database
