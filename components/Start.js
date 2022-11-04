@@ -27,35 +27,54 @@ export default class Start extends Component {
           style={styles.backgroundImage}>
           <Text style={styles.title}>Chat App</Text>
           {/* input section of home screen */}
-          <View style={styles.inputContainer}>
+          <View nativeID="formLabel" style={styles.inputContainer}>
             <TextInput
               style={[styles.text, styles.name]}
               placeholder='Your Name'
               onChangeText={(name) => this.setState({ name })}
               value={this.state.name}
+              accessibilityLabel="input"
+              accessibilityLabelledBy="formLabel"
+              accessibilityHint="Enters your name in the navigation bar"
             />
             {/* background color choice */}
             <View>
               <Text style={[styles.text, styles.bgText]}>Choose Background Color:</Text>
               <View style={styles.colors}>
                 <TouchableOpacity style={[{ backgroundColor: bgColor.black }, styles.background]}
-                  onPress={() => this.setState({ color: bgColor.black })}>
+                  onPress={() => this.setState({ color: bgColor.black })}
+                  accessible={true}
+                  accessibilityLabel="color black"
+                  accessibilityHint="Let’s you choose background color to black.">
                 </TouchableOpacity>
                 <TouchableOpacity style={[{ backgroundColor: bgColor.purple }, styles.background]}
-                  onPress={() => this.setState({ color: bgColor.purple })}>
+                  onPress={() => this.setState({ color: bgColor.purple })}
+                  accessible={true}
+                  accessibilityLabel="color purple"
+                  accessibilityHint="Let’s you change background color to purple.">
                 </TouchableOpacity>
                 <TouchableOpacity style={[{ backgroundColor: bgColor.grey }, styles.background]}
-                  onPress={() => this.setState({ color: bgColor.grey })}>
+                  onPress={() => this.setState({ color: bgColor.grey })}
+                  accessible={true}
+                  accessibilityLabel="color grey"
+                  accessibilityHint="Let’s you change background color to grey.">
                 </TouchableOpacity>
                 <TouchableOpacity style={[{ backgroundColor: bgColor.sage }, styles.background]}
-                  onPress={() => this.setState({ color: bgColor.sage })}>
+                  onPress={() => this.setState({ color: bgColor.sage })}
+                  accessible={true}
+                  accessibilityLabel="color sage green"
+                  accessibilityHint="Let’s you change background color to sage green.">
                 </TouchableOpacity>
               </View>
             </View>
             {/* button for entering chat component */}
             <View style={styles.buttonWrapper}>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, color: this.state.color })}
-              style={styles.button}
+                style={styles.button}
+                accessible={true}
+                accessibilityLabel="chat"
+                accessibilityHint="Navigates to the chat."
+                accessibilityRole="button"
               >
                 <Text style={styles.buttonText}>Start Chatting</Text>
               </TouchableOpacity>
