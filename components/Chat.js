@@ -1,43 +1,110 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+const firebase = require('firebase');
+require('firebase/firestore');
 
 export default class Chat extends Component {
   constructor() {
     super();
-    this.state = { messages: [] }
+    this.state = {
+      messages: [],
+      uid: 0,
+      user: {
+        _id: '',
+        name: '',
+        avatar: ''
+      }
+    };
+
+     // Firebase configuration
+    if(!firebase.apps.length) {
+      firebase.initializeApp(
+        {
+          apiKey: "AIzaSyANztBDqg0ahQuceGdZyBsPN2ncnk00WjI",
+          authDomain: "chatapp-d05d1.firebaseapp.com",
+          projectId: "chatapp-d05d1",
+          storageBucket: "chatapp-d05d1.appspot.com",
+          messagingSenderId: "223966456572",
+          appId: "1:223966456572:web:b1233a684500fc24668579",
+        });
+    }
+    this.referenceChatMessages = firebase.firestore().collection("messages");
   }
+
   componentDidMount() {
-    let name = this.props.route.params.name;
     // sets the input name from Start into navigation at top
+    let name = this.props.route.params.name;
     this.props.navigation.setOptions({ title: name });
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: `Hi, this is ${name}`,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-        // this is a system message
-        {
-          _id: 2,
-          text: `${name} has entered the chat`,
-          createdAt: new Date(),
-          system: true,
-        },
-      ],
+
+    this.referenceChatMessages = firebase.firestore().collection('messages');
+    if (this.referenceChatMessages !== (null || undefined)) {
+    this.unsubscribe = this.referenceChatMessages.onSnapshot(this.onCollectionUpdate);
+    }
+
+    // listen to authentication events
+    this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+      if (!user) {
+        await firebase.auth().signInAnonymously();
+      }
+      this.setState({
+        uid: user.uid,
+        messages: [],
+      });
+     this.unsubscribe = this.referenceChatMessages
+       .orderBy("desc", "createdAt")
+       .onSnapshot(this.onCollectionUpdate);
     });
   }
+
+  componentWillUnmount() {
+    // stop listening for changes
+    this.unsubscribe();
+    // stop listening to authentication
+    this.authUnsubscribe();
+  }
+
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [];
+    // go through each document
+    querySnapshot.forEach((doc) => {
+      // get the QueryDocumentSnapshot's data
+      let data = doc.data();
+      messages.push({
+        _id: data._id,
+        text: data.text,
+        createdAt: data.createdAt.toDate(),
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar
+        }
+      });
+    });
+    this.setState({
+      messages,
+    });
+  };
+
+  addMessage = () => {
+    const message = this.state.messages[0];
+    this.referenceChatMessages.add({
+      uid: this.state.uid,
+      _id: message._id,
+      text: message.text,
+      createdAt: message.createdAt,
+      user: message.user,
+    });
+  };
+
   // updates new message to state of messages object for display
   onSend(messages = []) {
     this.setState((previousState) => ({
       messages: GiftedChat.append(previousState.messages, messages),
-    }));
+    }),
+      () => {
+      this.addMessage();
+    });
   }
 
   // this changes the background color of the message bubble
@@ -63,14 +130,11 @@ export default class Chat extends Component {
     const { color, name } = this.props.route.params;
 
     return (
-      <View style={[styles.container, {backgroundColor: color} ]}>
+      <View style={[styles.container, { backgroundColor: color }]}>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
-          user={{
-            _id: 1,
-          }}
         />
 
         {/* moves the keyboard from hiding input field on Android */}
