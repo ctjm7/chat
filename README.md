@@ -1,14 +1,14 @@
 # Chat App
 
 <img
-  src="/screenshot-home.png"
+  src="./screenshot-home.png"
   alt="Chat App Home"
-  style="display: inline-block; margin: 0 auto; width: 400px; height: auto;">
+  style="display: inline-block; margin: 0 auto; width: 500px; height: auto;">
 
   <img
-  src="/screenshot-chat.png"
+  src="./screenshot-chat.png"
   alt="Chat App Chat Screen"
-  style="display: inline-block; margin: 0 auto; width: 400px; height: auto;">
+  style="display: block; margin: 0 auto; width: 500px; height: auto;">
 
 ## Description
 This is a mobile app built using React Native. The app provides users with a chat interface and options to share images and their location.
@@ -45,24 +45,24 @@ This app was developed to understand the use of React Native in mobile app devel
 8. Setup a database with [Google Firebase](https://firebase.google.com). You will login to your google account and then click on the console. You will setup a database with the necessary fields provided by Gifted Chat.
 
 ## Dependencies
-`"@expo/react-native-action-sheet": "^4.0.1",
-"@react-native-async-storage/async-storage": "~1.17.3",
-"@react-native-community/masked-view": "^0.1.11",
-"@react-native-community/netinfo": "9.3.0",
-"@react-navigation/native": "^6.0.13",
-"@react-navigation/stack": "^6.3.3",
-"expo": "~46.0.16",
-"expo-image-picker": "~13.3.1",
-"expo-location": "~14.3.0",
-"expo-permissions": "~13.2.0",
-"expo-status-bar": "~1.4.0",
-"firebase": "^7.9.0",
-"react": "18.0.0",
+```"@expo/react-native-action-sheet": "^4.0.1"
+"@react-native-async-storage/async-storage": "~1.17.3"
+"@react-native-community/masked-view": "^0.1.11"
+"@react-native-community/netinfo": "9.3.0"
+"@react-navigation/native": "^6.0.13"
+"@react-navigation/stack": "^6.3.3"
+"expo": "~46.0.16"
+"expo-image-picker": "~13.3.1"
+"expo-location": "~14.3.0"
+"expo-permissions": "~13.2.0"
+"expo-status-bar": "~1.4.0"
+"firebase": "^7.9.0"
+"react": "18.0.0"
 "react-native": "0.69.6",
-"react-native-gesture-handler": "~2.5.0",
-"react-native-gifted-chat": "^1.0.4",
-"react-native-maps": "0.31.1",
-"react-native-reanimated": "~2.9.1",
-"react-native-safe-area-context": "4.3.1",
-"react-native-screens": "~3.15.0",
-"react-navigation": "^4.4.4"`
+"react-native-gesture-handler": "~2.5.0"
+"react-native-gifted-chat": "^1.0.4"
+"react-native-maps": "0.31.1"
+"react-native-reanimated": "~2.9.1"
+"react-native-safe-area-context": "4.3.1"
+"react-native-screens": "~3.15.0"
+"react-navigation": "^4.4.4"```
