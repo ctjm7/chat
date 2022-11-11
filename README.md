@@ -1,6 +1,6 @@
 # Chat App
 
-!([home screenshot](screenshot-home.png)
+![home screenshot](screenshot-home.png)
 ![chat screenshot](screenshot-chat.png)
 
 ## Description
