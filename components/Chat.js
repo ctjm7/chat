@@ -5,6 +5,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from '@react-native-community/netinfo';
 const firebase = require('firebase');
 require('firebase/firestore');
+import CustomActions from './CustomActions';
+import MapView from 'react-native-maps';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 export default class Chat extends Component {
   constructor() {
@@ -17,7 +20,8 @@ export default class Chat extends Component {
         name: '',
         avatar: ''
       },
-      isConnected: false
+      isConnected: false,
+      image: null,
     };
 
      // Firebase configuration
@@ -38,7 +42,7 @@ export default class Chat extends Component {
   componentDidMount() {
     // sets the input name from Start into navigation at top
     let name = this.props.route.params.name;
-    this.props.navigation.setOptions({ title: name });
+    this.props.navigation.setOptions({ title: `${name}'s Chat` });
 
     // checks if user is connected to the internet
     NetInfo.fetch().then(connection => {
@@ -49,7 +53,9 @@ export default class Chat extends Component {
         });
         this.referenceChatMessages = firebase.firestore().collection('messages');
         if (this.referenceChatMessages !== (null || undefined)) {
-        this.unsubscribe = this.referenceChatMessages.onSnapshot(this.onCollectionUpdate);
+          this.unsubscribe = this.referenceChatMessages
+            .orderBy('createdAt', 'desc')
+            .onSnapshot(this.onCollectionUpdate);
         }
 
         // listen to authentication events
@@ -68,7 +74,6 @@ export default class Chat extends Component {
         this.unsubscribe = this.referenceChatMessages
           .orderBy('createdAt', 'desc')
           .onSnapshot(this.onCollectionUpdate);
-          this.saveMessages();
         });
         // offline loads locally saved messages
       } else {
@@ -97,13 +102,11 @@ export default class Chat extends Component {
       let data = doc.data();
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || '',
         createdAt: data.createdAt.toDate(),
-        user: {
-          _id: data.user._id,
-          name: data.user.name,
-          avatar: data.user.avatar
-        },
+        user: data.user,
+        image: data.image || null,
+        location: data.location || null,
       });
     });
     this.setState({
@@ -147,9 +150,12 @@ export default class Chat extends Component {
     this.referenceChatMessages.add({
       uid: this.state.uid,
       _id: message._id,
-      text: message.text,
+      // the text needs to include empty field option to render images
+      text: message.text || '',
       createdAt: message.createdAt,
       user: message.user,
+      image: message.image || null,
+      location: message.location || null,
     });
   };
 
@@ -191,16 +197,42 @@ export default class Chat extends Component {
       }
   };
 
-  render() {
+  // displays the communication features
+  renderCustomActions = (props) => {
+   return <CustomActions {...props} />;
+  };
 
+  //custom map view
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  }
+
+  render() {
     // this set state from Start for background color selection and name
     const { color, name } = this.props.route.params;
 
     return (
+      <ActionSheetProvider>
       <View style={[styles.container, { backgroundColor: color }]}>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
+          renderActions={this.renderCustomActions.bind(this)}
+          renderCustomView={this.renderCustomView.bind(this)}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={{ _id: this.state.user._id, name: name }}
@@ -209,7 +241,8 @@ export default class Chat extends Component {
         {/* moves the keyboard from hiding input field on Android */}
         {Platform.OS === 'android' ?
           <KeyboardAvoidingView behavior="height" /> : null}
-      </View>
+        </View>
+      </ActionSheetProvider>
     );
   };
 }
