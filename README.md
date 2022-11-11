@@ -1,14 +1,7 @@
 # Chat App
 
-<img
-  src="./screenshot-home.png"
-  alt="Chat App Home"
-  style="display: inline-block; margin: 0 auto; width: 500px; height: auto;">
-
-  <img
-  src="./screenshot-chat.png"
-  alt="Chat App Chat Screen"
-  style="display: block; margin: 0 auto; width: 500px; height: auto;">
+!([home screenshot](screenshot-home.png)
+![chat screenshot](screenshot-chat.png)
 
 ## Description
 This is a mobile app built using React Native. The app provides users with a chat interface and options to share images and their location.
@@ -65,4 +58,4 @@ This app was developed to understand the use of React Native in mobile app devel
 "react-native-reanimated": "~2.9.1"
 "react-native-safe-area-context": "4.3.1"
 "react-native-screens": "~3.15.0"
-"react-navigation": "^4.4.4"```
+"react-navigation": "^4.4.4"
